@@ -5,7 +5,7 @@ Soccerway.com scrapping with R. May be some data exploration will be added.
 
 Files:
 * ***soccerwayTeam.R*** - contains a function *soccerwayTeam(url)*. Takes url for the team squad info (for example, 
- see ***URLpattern.txt*** file) and reads the table.
+ see *URLpattern.txt* file) and reads the table.
 * ***teamIDs.R*** - contains *teamIDs(url)*. Takes the page such as this: 
 "http://int.soccerway.com/national/england/premier-league/20132014/regular-season/r21322/" and reads team IDs.
 * ***URLpattern.txt*** - contains a pattern, which describes how to construct a url for the squad info of the certain team 

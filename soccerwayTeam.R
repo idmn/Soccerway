@@ -18,14 +18,22 @@ soccerwayTeam <- function(url = defaultURL){
     data <- data[,-c(2,4)]
     
     names(data) <- c("SqN","Name","Age","Pos","Min","App","LUp","SIn","SOut","Bench","Goal","Assist","YC","2YC","RC")
-    
+   
     ## read letters with diacritics correctly
     ## this is not an efficient way to do it
     ## and maybe not all characters mentioned
-    data$Name <- gsub("\\\\u00e9","e",data$Name)
-    data$Name <- gsub("\\\\u0160","S",data$Name)
-    data$Name <- gsub("\\\\u00e1","a",data$Name)
-    data$Name <- gsub("\\\\u00e3","a",data$Name)    
+    SL <- list(    ## this is a list of substitutions 
+        c("\\\\u00e9","e"),
+        c("\\\\u0160","S"),
+        c("\\\\u00e1","a"),
+        c("\\\\u00e3","a"),
+        c("\\\\u0141","L")
+        )
+    
+    for(i in 1:length(SL)){
+        data$Name <- gsub(SL[[i]][[1]],SL[[i]][[2]],data$Name)
+    }
+       
     
     data
 }

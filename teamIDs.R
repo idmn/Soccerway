@@ -1,11 +1,11 @@
 ## extract team IDs
 
 ## this is Premier League, season 2013-2014
-defaultURLforteamIDs <- "http://int.soccerway.com/national/england/premier-league/20132014/regular-season/r21322/"
+defaultURLforteamIDs <- "http://int.soccerway.com/national/england/premier-league/20132014/regular-season/r21322/tables/"
 
 teamIDs <- function(url = defaultURLforteamIDs){
     html <- XML::htmlTreeParse(url, useInternalNodes=T)
-    data <- xpathSApply(html, "//td[@class = 'text team large-link']/a", xmlAttrs)
+    data <- XML::xpathSApply(html, "//td[@class = 'text team large-link']/a", XML::xmlAttrs)
     data <- t(data)
     data <- as.data.frame(data[,c(2,1)])    
     names(data) <- c("title","id")
@@ -17,8 +17,20 @@ teamIDs <- function(url = defaultURLforteamIDs){
         buf[[length(buf)]]
         }
     )
-    ## нужно разобраться, появляются лишние 5 записей
+    ## 5 entries are from the vidget. we don't want to get them 
     data <- head(data,n=-5)
     
+    ## fix some diacritics characters
+    SL <- list(    ## this is a list of substitutions 
+        c("Г¶","o"),
+        c("Гј","u"),
+        c("ГЎ","a"),
+        c("Г©","e"),
+        c("i‰","E"), ## doesn't work, see Saint-Etienne. dunno why
+        c("Г","i")
+    )    
+    for(i in 1:length(SL)){
+        data$title <- gsub(SL[[i]][[1]],SL[[i]][[2]],data$title)
+    }
     data
 }

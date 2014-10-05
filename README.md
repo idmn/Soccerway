@@ -17,5 +17,5 @@ Soccerway.com scrapping with R. May be some data exploration will be added.
 
 * ***URLpattern.txt*** - contains a pattern, which describes how to construct a url for the squad info of the certain team 
 in the certain season for the further usage by the *soccerwayTeam(url)* function.
-* ***Premier League 2013***, ***Bundesliga 2013*** folders - contain squad info for top 5 euro leagues in the 2013-2014 season.
+* ***Premier League 2013***, ***Bundesliga 2013***, etc folders - contain squad info for top 5 euro leagues in the 2013-2014 season.
 * ***League URLs.txt*** - a table with variables to use in *loadSquadInfos* function.

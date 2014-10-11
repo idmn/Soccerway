@@ -5,7 +5,7 @@
 
 loadSquadInfos <- function(
     url = "http://int.soccerway.com/national/england/premier-league/20132014/regular-season/r21322/tables/",                               
-    seasID = 8318, folder = NULL,createCompiledTable = F)
+    seasID = 8318, folder = NULL,createJoinedTable = F)
 {
     TID <- teamIDs(url)
     URLs <- sapply(TID$id,

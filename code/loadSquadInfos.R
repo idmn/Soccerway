@@ -1,9 +1,11 @@
 ## load all the squad infos for the clubs of the specified league
 ## to the choosen folder
 
+## SEE exploration2.R
+
 loadSquadInfos <- function(
     url = "http://int.soccerway.com/national/england/premier-league/20132014/regular-season/r21322/tables/",                               
-    seasID = 8318, folder = NULL)
+    seasID = 8318, folder = NULL,createCompiledTable = F)
 {
     TID <- teamIDs(url)
     URLs <- sapply(TID$id,

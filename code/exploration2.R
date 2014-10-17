@@ -1,7 +1,5 @@
 ## the repository folder has to be set as a working directory
 
-
-
 ## data directory
 d_d <- "data/Leagues 2013"
 ## list of league directories
@@ -49,8 +47,7 @@ explr_Pos.Age <- function(x){
     ## have to add sd and n values to perform t.tests    
 }
 
-smth <- sapply(tables, explr_Pos.Age)
-write.table(smth,"findings/pos_age.txt")
+smth <- t(sapply(tables, explr_Pos.Age))
 write.csv(smth,"findings/pos_age.csv")
 
 explr_Pos.GoalPMin <- function(x){
@@ -69,6 +66,35 @@ explr_Pos.GoalPMin <- function(x){
 
 
 
-smth2 <- sapply(tables, explr_Pos.GoalPMin)
-write.table(smth2,"findings/pos_gpm.txt")
+smth2 <- t(sapply(tables, explr_Pos.GoalPMin))
 write.csv(smth2,"findings/pos_gpm.csv")
+
+explr_AvMatch <- function(x){
+    ## this function is to be applied to the joined league table
+    ## the result is a vector of average number of goals, yellow,
+    ## double-yellow and red cards per match
+    
+    ## number of teams
+    n <- length(levels(x$Club))
+    colSums(x[,list(Goal,YC,X2YC,RC)])/n/(n-1)
+}
+
+smth3 <- sapply(tables, explr_AvMatch)
+smth3 <- t(smth3)
+write.csv(smth3,"findings/AvMatch.csv")
+
+## some histograms
+png("findings/AvMatch-1.png")
+barplot(smth3[,c("Goal","YC")],
+        col=c("yellow","green","gray","red","cyan"),
+        legend=rownames(smth3),beside=T,
+        args.legend=list(x="topleft"))
+dev.off()
+png("findings/AvMatch-2.png")
+barplot(smth3[,c("X2YC","RC")],
+        col=c("yellow","green","gray","red","cyan"),
+        legend=rownames(smth3),beside=T,
+        args.legend=list("toprigth"))
+
+dev.off()
+

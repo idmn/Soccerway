@@ -18,3 +18,12 @@ Soccerway.com scrapping with R. May be some data exploration will be added.
 in the certain season for the further usage by the *soccerwayTeam(url)* function.
 * ***Leagues 2013*** folder - contain squad info for top 5 euro leagues in the 2013-2014 season.
 * ***League URLs.txt*** - a table with variables to use in *loadSquadInfos* function.
+ 
+### "findings" folder
+Contains some findings derived from datasets available.
+
+* ***AvMatch.csv*** - avarage goals and cards quantity per match for top 5 european leagues.
+* ***AvMatch-1.png*** and ***AvMatch-2.png*** - histograms for *AvMatch.csv*
+* ***pos_age.csv*** - average age per postion.
+* ***pos_gpm.csv*** - average goals per position.
+

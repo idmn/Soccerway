@@ -1,40 +1,9 @@
-## the repository folder has to be set as a working directory
+## first, source "loadTablesToMemoryForExploration.R"
 
-## data directory
-d_d <- "data/Leagues 2013"
-## list of league directories
-leagueNames <- list.files(d_d)
-dirs <-sapply(leagueNames,function(x) paste0(d_d,"/",x))
+## NEW TABLES AND HISTOGRAMS
 
-# THIS PART CREATES A JOINED TABLE OF ALL PLAYERS OF THE LEAGUE
-# SHOULD ADD THIS CODE TO THE loadSquadInfos.R 
-createJoinedTable <- function(dir){
-    ## list of file names in the league directory
-    clubs <- list.files(dir)
-    ## list of file URLs
-    files <- sapply(clubs,function (x) paste0(dir,"/",x),
-                            USE.NAMES = F)
-    ##remove "txt"s at the end
-    clubs <- gsub(".[A-Za-z]+$","",clubs)
-    ## table of all premier league players
-    table <-lapply(files,read.table)
-    ## add a club collumn
-    table <-mapply(function(x,y){
-        cbind(Club = y,x)
-    },
-    table,
-    clubs,
-    SIMPLIFY = F
-    )
-    table <- data.table::rbindlist(table)
-    ## return only the rows with complete information
-    table[complete.cases(table)]
-}
- 
-tables <- lapply(dirs, function(x) createJoinedTable(x))
-## delete " 2013" note at the end of league names
-names(tables) <- gsub(" 2013$","",names(tables))
-## obtain some info about league
+#==============(1)===========================
+### make table
 explr_Pos.Age <- function(x){
     ## this function is to be applied to the joined league table
     ## the result is a vector of age means for each
@@ -44,12 +13,15 @@ explr_Pos.Age <- function(x){
     split_Pos.Age <- sapply(split_Pos, function(x) x$Age)
     mean_Pos.Age <- sapply(split_Pos.Age,function (x) mean(x,na.rm = T))
     c(mean_Pos.Age,all = meanAge)
-    ## have to add sd and n values to perform t.tests    
+    ## have to add sd and n values to perform t.tests  ???  
 }
+pos_age <- t(sapply(tables, explr_Pos.Age))
+### write table
+write.csv(pos_age,"findings/pos_age.csv")
+### no histograms yet
 
-smth <- t(sapply(tables, explr_Pos.Age))
-write.csv(smth,"findings/pos_age.csv")
-
+#==============(2)===========================
+### make table
 explr_Pos.GoalPMin <- function(x){
     ## this function is to be applied to the joined league table
     ## the result is a vector of (total goals)/(total mins/90) for
@@ -63,12 +35,19 @@ explr_Pos.GoalPMin <- function(x){
     split_Pos.gpm <- 90*split_Pos.GoalSum/split_Pos.MinSum
     c(split_Pos.gpm,all = gpm)       
 }
+pos_gpm <- t(sapply(tables, explr_Pos.GoalPMin))
+### write table
+write.csv(pos_gpm,"findings/pos_gpm.csv")
+### create histogram
+png("findings/pos_gpm.png")
+barplot(pos_gpm[,-3], ## no need to watch the goalkeepers stats
+        col=c("yellow","green","gray","red","cyan"),
+        legend=rownames(pos_gpm),beside=T,        
+)
+dev.off()
 
-
-
-smth2 <- t(sapply(tables, explr_Pos.GoalPMin))
-write.csv(smth2,"findings/pos_gpm.csv")
-
+#==============(3)===========================
+### make table
 explr_AvMatch <- function(x){
     ## this function is to be applied to the joined league table
     ## the result is a vector of average number of goals, yellow,
@@ -78,23 +57,51 @@ explr_AvMatch <- function(x){
     n <- length(levels(x$Club))
     colSums(x[,list(Goal,YC,X2YC,RC)])/n/(n-1)
 }
-
-smth3 <- sapply(tables, explr_AvMatch)
-smth3 <- t(smth3)
-write.csv(smth3,"findings/AvMatch.csv")
-
-## some histograms
+AvMatch <- t(sapply(tables, explr_AvMatch))
+### write table
+write.csv(AvMatch,"findings/AvMatch.csv")
+### create histograms
 png("findings/AvMatch-1.png")
-barplot(smth3[,c("Goal","YC")],
+barplot(AvMatch[,c("Goal","YC")],
         col=c("yellow","green","gray","red","cyan"),
-        legend=rownames(smth3),beside=T,
+        legend=rownames(AvMatch),beside=T,
         args.legend=list(x="topleft"))
 dev.off()
+
 png("findings/AvMatch-2.png")
-barplot(smth3[,c("X2YC","RC")],
+barplot(AvMatch[,c("X2YC","RC")],
         col=c("yellow","green","gray","red","cyan"),
-        legend=rownames(smth3),beside=T,
+        legend=rownames(AvMatch),beside=T,
         args.legend=list("toprigth"))
 
 dev.off()
+
+#==============(4)===========================
+### make table
+explr_Pos.Plrs <- function(x){
+    ## this function is to be applied to the joined league table
+    ## the result is a vector of average average number of players
+    ## played on each position
+        
+    ## number of teams
+    n <- length(levels(x$Club))
+    ## number of matches
+    m <- n*(n-1)
+    ## no need of gk's stats
+    split_Pos <- split(x,x$Pos)[-3]
+    split_Pos.Min <- sapply(split_Pos, function(x) sum(x$Min))/(2*m)
+    
+    pos_plrs <- split_Pos.Min/90
+    ## normalize the result
+    pos_plrs <- 10*pos_plrs/sum(pos_plrs)
+    pos_plrs    
+}
+pos_plrs <- t(sapply(tables,explr_Pos.Plrs))
+### write table
+write.csv(pos_plrs,"findings/pos_plrs.csv")
+
+
+
+
+
 

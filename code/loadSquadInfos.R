@@ -1,7 +1,7 @@
 ## load all the squad infos for the clubs of the specified league
 ## to the choosen folder
 
-## SEE exploration2.R
+## for me: SEE exploration2.R
 
 loadSquadInfos <- function(
     url = "http://int.soccerway.com/national/england/premier-league/20132014/regular-season/r21322/tables/",                               

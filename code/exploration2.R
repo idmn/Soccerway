@@ -78,12 +78,13 @@ dev.off()
 
 #==============(4)===========================
 ### make table
-explr_Pos.Plrs <- function(x){
+explr_Pos.Plrs <- function(x, n = NULL){
     ## this function is to be applied to the joined league table
     ## the result is a vector of average average number of players
     ## played on each position
         
     ## number of teams
+    if(is.null(n))
     n <- length(levels(x$Club))
     ## number of matches
     m <- n*(n-1)

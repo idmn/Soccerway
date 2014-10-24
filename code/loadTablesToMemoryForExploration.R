@@ -8,7 +8,7 @@ dirs <-sapply(leagueNames,function(x) paste0(d_d,"/",x))
 
 # THIS PART CREATES A JOINED TABLE OF ALL PLAYERS OF THE LEAGUE
 # SHOULD ADD THIS CODE TO THE loadSquadInfos.R 
-createJoinedTable <- function(dir){
+createJoinedTable <- function(dir,bind=T){
   ## list of file names in the league directory
   clubs <- list.files(dir)
   ## list of file URLs
@@ -18,22 +18,29 @@ createJoinedTable <- function(dir){
   clubs <- gsub(".[A-Za-z]+$","",clubs)
   ## table of all premier league players
   table <-lapply(files,read.table)
-  ## add a club collumn
-  table <-mapply(function(x,y){
-    cbind(Club = y,x)
-  },
-  table,
-  clubs,
-  SIMPLIFY = F
-  )
-  table <- data.table::rbindlist(table)
-  ## return only the rows with complete information
-  table[complete.cases(table)]
+
+  
+  if(bind){
+      ## add a club collumn
+      table <-mapply(function(x,y){
+          cbind(Club = y,x)
+      },
+      table,
+      clubs,
+      SIMPLIFY = F
+      )
+      table <- data.table::rbindlist(table)
+      ## return only the rows with complete information
+      table <- table[complete.cases(table)]       
+  }
+  else{
+      names(table) <- clubs
+  }
+  
+  table
  }
 
 tables <- lapply(dirs, function(x) createJoinedTable(x))
 ## delete " 2013" note at the end of league names
 names(tables) <- gsub(" 2013$","",names(tables))
 
-## to not perform this again while executing exploration2.R
-tablesAreLoaded <- T

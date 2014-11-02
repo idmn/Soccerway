@@ -23,7 +23,7 @@ soccerwayTeam <- function(url = defaultURL){
    
     ## read letters with diacritics correctly
     ## this is not an efficient way to do it
-    ## and maybe not all characters mentioned
+    ## and maybe (surely) not all characters mentioned
     SL <- list(    ## this is a list of substitutions 
         c("\\\\u00e9","e"),
         c("\\\\u0160","S"),

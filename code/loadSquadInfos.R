@@ -5,7 +5,7 @@
 
 loadSquadInfos <- function(
     url = "http://int.soccerway.com/national/england/premier-league/20132014/regular-season/r21322/tables/",                               
-    seasID = 8318, folder = NULL,createJoinedTable = F)
+    seasID = 8318, folder = NULL,returnData = T)
 {
     TID <- teamIDs(url)
     URLs <- sapply(TID$id,
@@ -25,10 +25,11 @@ loadSquadInfos <- function(
     ## write data in the files
     if(!is.null(folder)){
         mapply(
-            function(x,y) write.table(x,paste0(folder,"//",y,".txt")),
+            function(x,y) write.csv(x, paste0(folder,"/",y,".csv"),
+                                    row.names = F),
             data,names(data)
         )  
     }
-    data
+    if(returnData) return(data)
 }
 

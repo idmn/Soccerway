@@ -17,7 +17,7 @@ createJoinedTable <- function(dir,bind=T){
   ##remove "txt"s at the end
   clubs <- gsub(".[A-Za-z]+$","",clubs)
   ## table of all premier league players
-  table <-lapply(files,read.table)
+  table <-lapply(files,read.csv)
 
   
   if(bind){

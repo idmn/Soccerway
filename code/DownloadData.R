@@ -1,6 +1,7 @@
 ## directory to which all the squad info will be downloaded
 dir <- "data/Leagues 2013"
 
+
 ## this file contains all needed information for downloading
 ## squad info for some certain leagues 
 LURLs <- read.csv("data/League URLs.csv")

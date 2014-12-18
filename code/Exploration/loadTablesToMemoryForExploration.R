@@ -1,5 +1,6 @@
 ## the repository folder has to be set as a working directory
 ## data directory
+## a "tables" variable will be created
 d_d <- "data/Leagues 2013"
 ## list of league directories
 leagueNames <- list.files(d_d)

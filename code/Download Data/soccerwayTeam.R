@@ -22,6 +22,8 @@ soccerwayTeam <- function(url = defaultURL){
     names(data) <- c("SqN","Name","Age","Pos","Min","App","LUp",
         "SIn","SOut","Bench","Goal","Assist","YC","2YC","RC")
    
+    ## set numbers to numeric
+    for (i in c(1,3,5:15)) data[,i]=as.numeric(data[,i])
     
     data$Name <- handleDiacritics(data$Name)
     
